@@ -55,7 +55,7 @@ const svg = d3
   );
 const g = svg.append("g");
 
-// Add a drop-shadow filter in a defs block.
+// Add a drop-shadow filter.
 const defs = svg.append("defs");
 const dropShadowFilter = defs
   .append("filter")
@@ -100,23 +100,48 @@ function updateStorage() {
   console.log("Graph state updated in localStorage");
 }
 
-// Remove connection handler (attached to both layers).
+/* Remove connection handler.
+   - For both manual (red) and non-manual (black) connections,
+     we revert the target node's state.
+   - For manual links, we expect an existing ambiguousData.
+   - For non-manual links, we construct ambiguousData using the link's column.
+   - Additionally, for non-ambiguous connections, we now set the target's
+     wasAmbiguous flag to true so that later, upon reconnection, the node turns green.
+*/
 function removeLink(event, d) {
   if (
     confirm(
       `Remove connection from ${d.source.id} to ${d.target.id} (${d.column})?`
     )
   ) {
+    let targetNode = graph.nodes.find((n) => n.id === d.target.id);
+    if (targetNode) {
+      // Mark the node as having been ambiguous (even if it was originally blue).
+      targetNode.wasAmbiguous = true;
+      let ambiguousData;
+      if (d.manual && d.ambiguousData) {
+        ambiguousData = d.ambiguousData;
+      } else {
+        ambiguousData = [d.column, "unknown"];
+      }
+      let exists = targetNode.ambiguousCols.some(
+        (x) => x[0] === ambiguousData[0]
+      );
+      if (!exists) {
+        targetNode.ambiguousCols.push(ambiguousData);
+      }
+      targetNode.ambiguous = true;
+    }
     graph.links = graph.links.filter((l) => l !== d);
     refreshGraph();
   }
   event.stopPropagation();
 }
 
-// Functions to apply and remove hover effect.
+// Functions to apply and remove hover effect with dynamic drop-shadow.
 function applyHoverEffect(linkGroup, d) {
   const zoomScale = d3.zoomTransform(svg.node()).k;
-  // Update filter parameters based on zoom scale.
+  // Update drop-shadow filter parameters based on zoom scale.
   svg
     .select("#dropShadow feDropShadow")
     .attr("dx", 2 * zoomScale)
@@ -144,12 +169,12 @@ function refreshGraph() {
   link.exit().remove();
   let linkEnter = link.enter().append("g").attr("class", "link-group");
 
-  // Invisible hit area (non-scaling so it stays constant on screen).
+  // Invisible hit area (non-scaling so its stroke remains constant).
   linkEnter
     .append("line")
     .attr("class", "link-hit")
     .attr("vector-effect", "non-scaling-stroke")
-    .style("stroke-width", 30)
+    .style("stroke-width", 10)
     .style("stroke", "transparent")
     .style("pointer-events", "stroke")
     .on("click", removeLink)
@@ -196,9 +221,11 @@ function refreshGraph() {
 
   // Set node colors.
   node.select("circle").attr("fill", function (d) {
+    // If a node was marked as having been ambiguous and now has no ambiguous columns, turn green.
     if (d.wasAmbiguous && (!d.ambiguousCols || d.ambiguousCols.length === 0))
       return "green";
     if (d.ambiguousCols && d.ambiguousCols.length > 0) return "yellow";
+    // Otherwise, leave it as default blue.
     return "#1E90FF";
   });
   node.select("text").text((d) => d.id);
@@ -317,11 +344,13 @@ function openTargetModal(nodeData, col, parentModal) {
       .merge(items)
       .text((d) => d.id)
       .on("click", function (event, chosen) {
+        // When adding a manual connection for ambiguous fix, store the ambiguousData.
         graph.links.push({
           source: chosen.id,
           target: nodeData.id,
           column: col[0],
           manual: true,
+          ambiguousData: col,
         });
         let idx = nodeData.ambiguousCols.findIndex((x) => x[0] === col[0]);
         if (idx >= 0) nodeData.ambiguousCols.splice(idx, 1);
