@@ -106,9 +106,9 @@
     </div>
     <!-- Inject default graph state from Python -->
     <script>
-      const GRAPH_DATA = {{ graph_data | safe }};
+      window.GRAPH_DATA = {{ graph_data | safe }};
     </script>
-    <!-- Load external JS file (relative path) -->
-    <script src="static/js/visualizer.js"></script>
+    <!-- Use the bundled JS file -->
+    <script src="static/bundle.js"></script>
   </body>
 </html>
