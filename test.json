@@ -1,0 +1,472 @@
+{
+  "nodes": [
+    {
+      "id": "addresses",
+      "info": "addresses_id (int)<br>users_id (int)<br>address_line1 (varchar(255))<br>address_line2 (varchar(255))<br>city (varchar(100))<br>state (varchar(100))<br>postal_code (varchar(20))<br>country (varchar(100))<br>is_default (tinyint(1))<br>created_at (timestamp)<br>updated_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 703.0866163726962,
+      "y": 571.3337364566443,
+      "vx": -0.0006329924375269726,
+      "vy": 0.00028793936727931484,
+      "index": 0
+    },
+    {
+      "id": "cart_items",
+      "info": "cart_items_id (int)<br>users_id (int)<br>products_id (int)<br>quantity (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 618.0713410481021,
+      "y": 313.29924031138125,
+      "vx": -0.0005709613710939808,
+      "vy": 0.00026515204215408507,
+      "index": 1,
+      "fx": null,
+      "fy": null
+    },
+    {
+      "id": "categories",
+      "info": "categories_id (int)<br>name (varchar(100))<br>description (text)<br><span style='background-color:yellow'>parent_categories_id (int)</span><br>created_at (timestamp)",
+      "ambiguous": true,
+      "ambiguousCols": [["parent_categories_id", "int"]],
+      "wasAmbiguous": true,
+      "x": 691.2214413725359,
+      "y": 74.09632692250784,
+      "vx": -0.00037939904919026047,
+      "vy": 0.00030190053691195177,
+      "index": 2,
+      "fx": null,
+      "fy": null
+    },
+    {
+      "id": "coupons",
+      "info": "coupons_id (int)<br>code (varchar(50))<br>discount_percent (decimal(5,2))<br>discount_amount (decimal(10,2))<br>min_purchase_amount (decimal(10,2))<br>start_date (timestamp)<br>end_date (timestamp)<br>is_active (tinyint(1))<br>created_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 933.882720921381,
+      "y": 252.65375172051836,
+      "vx": -0.00047281189815132177,
+      "vy": 0.0005139385701501438,
+      "index": 3,
+      "fx": null,
+      "fy": null
+    },
+    {
+      "id": "order_coupons",
+      "info": "order_coupons_id (int)<br>orders_id (int)<br>coupons_id (int)<br>discount_amount (decimal(10,2))<br>created_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": true,
+      "x": 908.5698467284108,
+      "y": 404.1885835907779,
+      "vx": -0.0006042851026029631,
+      "vy": 0.0004959690738228359,
+      "index": 4,
+      "fx": null,
+      "fy": null
+    },
+    {
+      "id": "order_items",
+      "info": "order_items_id (int)<br>orders_id (int)<br>products_id (int)<br>quantity (int)<br>price_per_unit (decimal(10,2))<br>created_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 721.8955356390857,
+      "y": 234.24847722355247,
+      "vx": -0.0004629539833710335,
+      "vy": 0.0003033623389763002,
+      "index": 5
+    },
+    {
+      "id": "orders",
+      "info": "orders_id (int)<br>users_id (int)<br>status (enum('pending','processing','shipped','delivered','cancelled'))<br>total_amount (decimal(10,2))<br>shipping_address (text)<br>created_at (timestamp)<br>updated_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 752.0385184087844,
+      "y": 395.2122334707071,
+      "vx": -0.0005900972036035043,
+      "vy": 0.0003151756653555526,
+      "index": 6
+    },
+    {
+      "id": "products",
+      "info": "products_id (int)<br>name (varchar(255))<br>description (text)<br>price (decimal(10,2))<br>stock_quantity (int)<br>categories_id (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 569.7002089247749,
+      "y": 168.38090946591865,
+      "vx": -0.00044637504387814335,
+      "vy": 0.00021252063345113208,
+      "index": 7
+    },
+    {
+      "id": "reviews",
+      "info": "reviews_id (int)<br>products_id (int)<br>users_id (int)<br>rating (int)<br>comment (text)<br>created_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 505.8345035391504,
+      "y": 323.0576923793169,
+      "vx": -0.0005836006903280937,
+      "vy": 0.00015547238186911424,
+      "index": 8,
+      "fx": null,
+      "fy": null
+    },
+    {
+      "id": "users",
+      "info": "users_id (int)<br>username (varchar(50))<br>email (varchar(100))<br>password_hash (varchar(255))<br>first_name (varchar(50))<br>last_name (varchar(50))<br>created_at (timestamp)<br>updated_at (timestamp)",
+      "ambiguous": false,
+      "ambiguousCols": [],
+      "wasAmbiguous": false,
+      "x": 595.6938944332447,
+      "y": 463.5321816053383,
+      "vx": -0.0006291350543896097,
+      "vy": 0.0002817160527839101,
+      "index": 9
+    }
+  ],
+  "links": [
+    {
+      "source": {
+        "id": "categories",
+        "info": "categories_id (int)<br>name (varchar(100))<br>description (text)<br><span style='background-color:yellow'>parent_categories_id (int)</span><br>created_at (timestamp)",
+        "ambiguous": true,
+        "ambiguousCols": [["parent_categories_id", "int"]],
+        "wasAmbiguous": true,
+        "x": 691.2214413725359,
+        "y": 74.09632692250784,
+        "vx": -0.00037939904919026047,
+        "vy": 0.00030190053691195177,
+        "index": 2,
+        "fx": null,
+        "fy": null
+      },
+      "target": {
+        "id": "products",
+        "info": "products_id (int)<br>name (varchar(255))<br>description (text)<br>price (decimal(10,2))<br>stock_quantity (int)<br>categories_id (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 569.7002089247749,
+        "y": 168.38090946591865,
+        "vx": -0.00044637504387814335,
+        "vy": 0.00021252063345113208,
+        "index": 7
+      },
+      "column": "categories_id",
+      "manual": false,
+      "index": 0
+    },
+    {
+      "source": {
+        "id": "orders",
+        "info": "orders_id (int)<br>users_id (int)<br>status (enum('pending','processing','shipped','delivered','cancelled'))<br>total_amount (decimal(10,2))<br>shipping_address (text)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 752.0385184087844,
+        "y": 395.2122334707071,
+        "vx": -0.0005900972036035043,
+        "vy": 0.0003151756653555526,
+        "index": 6
+      },
+      "target": {
+        "id": "order_coupons",
+        "info": "order_coupons_id (int)<br>orders_id (int)<br>coupons_id (int)<br>discount_amount (decimal(10,2))<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": true,
+        "x": 908.5698467284108,
+        "y": 404.1885835907779,
+        "vx": -0.0006042851026029631,
+        "vy": 0.0004959690738228359,
+        "index": 4,
+        "fx": null,
+        "fy": null
+      },
+      "column": "orders_id",
+      "manual": false,
+      "index": 1
+    },
+    {
+      "source": {
+        "id": "orders",
+        "info": "orders_id (int)<br>users_id (int)<br>status (enum('pending','processing','shipped','delivered','cancelled'))<br>total_amount (decimal(10,2))<br>shipping_address (text)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 752.0385184087844,
+        "y": 395.2122334707071,
+        "vx": -0.0005900972036035043,
+        "vy": 0.0003151756653555526,
+        "index": 6
+      },
+      "target": {
+        "id": "order_items",
+        "info": "order_items_id (int)<br>orders_id (int)<br>products_id (int)<br>quantity (int)<br>price_per_unit (decimal(10,2))<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 721.8955356390857,
+        "y": 234.24847722355247,
+        "vx": -0.0004629539833710335,
+        "vy": 0.0003033623389763002,
+        "index": 5
+      },
+      "column": "orders_id",
+      "manual": false,
+      "index": 2
+    },
+    {
+      "source": {
+        "id": "products",
+        "info": "products_id (int)<br>name (varchar(255))<br>description (text)<br>price (decimal(10,2))<br>stock_quantity (int)<br>categories_id (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 569.7002089247749,
+        "y": 168.38090946591865,
+        "vx": -0.00044637504387814335,
+        "vy": 0.00021252063345113208,
+        "index": 7
+      },
+      "target": {
+        "id": "cart_items",
+        "info": "cart_items_id (int)<br>users_id (int)<br>products_id (int)<br>quantity (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 618.0713410481021,
+        "y": 313.29924031138125,
+        "vx": -0.0005709613710939808,
+        "vy": 0.00026515204215408507,
+        "index": 1,
+        "fx": null,
+        "fy": null
+      },
+      "column": "products_id",
+      "manual": false,
+      "index": 3
+    },
+    {
+      "source": {
+        "id": "products",
+        "info": "products_id (int)<br>name (varchar(255))<br>description (text)<br>price (decimal(10,2))<br>stock_quantity (int)<br>categories_id (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 569.7002089247749,
+        "y": 168.38090946591865,
+        "vx": -0.00044637504387814335,
+        "vy": 0.00021252063345113208,
+        "index": 7
+      },
+      "target": {
+        "id": "order_items",
+        "info": "order_items_id (int)<br>orders_id (int)<br>products_id (int)<br>quantity (int)<br>price_per_unit (decimal(10,2))<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 721.8955356390857,
+        "y": 234.24847722355247,
+        "vx": -0.0004629539833710335,
+        "vy": 0.0003033623389763002,
+        "index": 5
+      },
+      "column": "products_id",
+      "manual": false,
+      "index": 4
+    },
+    {
+      "source": {
+        "id": "products",
+        "info": "products_id (int)<br>name (varchar(255))<br>description (text)<br>price (decimal(10,2))<br>stock_quantity (int)<br>categories_id (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 569.7002089247749,
+        "y": 168.38090946591865,
+        "vx": -0.00044637504387814335,
+        "vy": 0.00021252063345113208,
+        "index": 7
+      },
+      "target": {
+        "id": "reviews",
+        "info": "reviews_id (int)<br>products_id (int)<br>users_id (int)<br>rating (int)<br>comment (text)<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 505.8345035391504,
+        "y": 323.0576923793169,
+        "vx": -0.0005836006903280937,
+        "vy": 0.00015547238186911424,
+        "index": 8,
+        "fx": null,
+        "fy": null
+      },
+      "column": "products_id",
+      "manual": false,
+      "index": 5
+    },
+    {
+      "source": {
+        "id": "users",
+        "info": "users_id (int)<br>username (varchar(50))<br>email (varchar(100))<br>password_hash (varchar(255))<br>first_name (varchar(50))<br>last_name (varchar(50))<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 595.6938944332447,
+        "y": 463.5321816053383,
+        "vx": -0.0006291350543896097,
+        "vy": 0.0002817160527839101,
+        "index": 9
+      },
+      "target": {
+        "id": "addresses",
+        "info": "addresses_id (int)<br>users_id (int)<br>address_line1 (varchar(255))<br>address_line2 (varchar(255))<br>city (varchar(100))<br>state (varchar(100))<br>postal_code (varchar(20))<br>country (varchar(100))<br>is_default (tinyint(1))<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 703.0866163726962,
+        "y": 571.3337364566443,
+        "vx": -0.0006329924375269726,
+        "vy": 0.00028793936727931484,
+        "index": 0
+      },
+      "column": "users_id",
+      "manual": false,
+      "index": 6
+    },
+    {
+      "source": {
+        "id": "users",
+        "info": "users_id (int)<br>username (varchar(50))<br>email (varchar(100))<br>password_hash (varchar(255))<br>first_name (varchar(50))<br>last_name (varchar(50))<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 595.6938944332447,
+        "y": 463.5321816053383,
+        "vx": -0.0006291350543896097,
+        "vy": 0.0002817160527839101,
+        "index": 9
+      },
+      "target": {
+        "id": "cart_items",
+        "info": "cart_items_id (int)<br>users_id (int)<br>products_id (int)<br>quantity (int)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 618.0713410481021,
+        "y": 313.29924031138125,
+        "vx": -0.0005709613710939808,
+        "vy": 0.00026515204215408507,
+        "index": 1,
+        "fx": null,
+        "fy": null
+      },
+      "column": "users_id",
+      "manual": false,
+      "index": 7
+    },
+    {
+      "source": {
+        "id": "users",
+        "info": "users_id (int)<br>username (varchar(50))<br>email (varchar(100))<br>password_hash (varchar(255))<br>first_name (varchar(50))<br>last_name (varchar(50))<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 595.6938944332447,
+        "y": 463.5321816053383,
+        "vx": -0.0006291350543896097,
+        "vy": 0.0002817160527839101,
+        "index": 9
+      },
+      "target": {
+        "id": "orders",
+        "info": "orders_id (int)<br>users_id (int)<br>status (enum('pending','processing','shipped','delivered','cancelled'))<br>total_amount (decimal(10,2))<br>shipping_address (text)<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 752.0385184087844,
+        "y": 395.2122334707071,
+        "vx": -0.0005900972036035043,
+        "vy": 0.0003151756653555526,
+        "index": 6
+      },
+      "column": "users_id",
+      "manual": false,
+      "index": 8
+    },
+    {
+      "source": {
+        "id": "users",
+        "info": "users_id (int)<br>username (varchar(50))<br>email (varchar(100))<br>password_hash (varchar(255))<br>first_name (varchar(50))<br>last_name (varchar(50))<br>created_at (timestamp)<br>updated_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 595.6938944332447,
+        "y": 463.5321816053383,
+        "vx": -0.0006291350543896097,
+        "vy": 0.0002817160527839101,
+        "index": 9
+      },
+      "target": {
+        "id": "reviews",
+        "info": "reviews_id (int)<br>products_id (int)<br>users_id (int)<br>rating (int)<br>comment (text)<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 505.8345035391504,
+        "y": 323.0576923793169,
+        "vx": -0.0005836006903280937,
+        "vy": 0.00015547238186911424,
+        "index": 8,
+        "fx": null,
+        "fy": null
+      },
+      "column": "users_id",
+      "manual": false,
+      "index": 9
+    },
+    {
+      "source": {
+        "id": "coupons",
+        "info": "coupons_id (int)<br>code (varchar(50))<br>discount_percent (decimal(5,2))<br>discount_amount (decimal(10,2))<br>min_purchase_amount (decimal(10,2))<br>start_date (timestamp)<br>end_date (timestamp)<br>is_active (tinyint(1))<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": false,
+        "x": 933.882720921381,
+        "y": 252.65375172051836,
+        "vx": -0.00047281189815132177,
+        "vy": 0.0005139385701501438,
+        "index": 3,
+        "fx": null,
+        "fy": null
+      },
+      "target": {
+        "id": "order_coupons",
+        "info": "order_coupons_id (int)<br>orders_id (int)<br>coupons_id (int)<br>discount_amount (decimal(10,2))<br>created_at (timestamp)",
+        "ambiguous": false,
+        "ambiguousCols": [],
+        "wasAmbiguous": true,
+        "x": 908.5698467284108,
+        "y": 404.1885835907779,
+        "vx": -0.0006042851026029631,
+        "vy": 0.0004959690738228359,
+        "index": 4,
+        "fx": null,
+        "fy": null
+      },
+      "column": "coupons_id",
+      "manual": true,
+      "ambiguousData": ["coupons_id", "unknown"],
+      "index": 10
+    }
+  ]
+}

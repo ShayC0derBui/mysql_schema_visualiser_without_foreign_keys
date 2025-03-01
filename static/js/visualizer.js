@@ -104,12 +104,10 @@ function updateStorage() {
 }
 
 /* Remove connection handler.
-   - For both manual (red) and non-manual (black) connections,
-     we revert the target node's state.
-   - For manual links, we expect an existing ambiguousData.
-   - For non-manual links, we construct ambiguousData using the link's column.
-   - Additionally, for non-ambiguous connections, we now set the target's
-     wasAmbiguous flag to true so that later, upon reconnection, the node turns green.
+   - For both manual (red) and non-manual (black) connections, we revert the target node's state.
+   - For manual links, we expect ambiguousData.
+   - For non-manual links, we fabricate ambiguousData as [column, "unknown"].
+   - Additionally, for non-ambiguous connections, we mark targetNode.wasAmbiguous as true.
 */
 function removeLink(event, d) {
   if (
@@ -119,7 +117,6 @@ function removeLink(event, d) {
   ) {
     let targetNode = graph.nodes.find((n) => n.id === d.target.id);
     if (targetNode) {
-      // Mark the node as having been ambiguous (even if it was originally blue).
       targetNode.wasAmbiguous = true;
       let ambiguousData;
       if (d.manual && d.ambiguousData) {
@@ -144,7 +141,6 @@ function removeLink(event, d) {
 // Functions to apply and remove hover effect with dynamic drop-shadow.
 function applyHoverEffect(linkGroup, d) {
   const zoomScale = d3.zoomTransform(svg.node()).k;
-  // Update drop-shadow filter parameters based on zoom scale.
   svg
     .select("#dropShadow feDropShadow")
     .attr("dx", 2 * zoomScale)
@@ -164,7 +160,6 @@ function removeHoverEffect(linkGroup, d) {
 
 // Refresh (redraw) the graph.
 function refreshGraph() {
-  // Update links.
   link = link.data(
     graph.links,
     (d) => d.source.id + "-" + d.target.id + "-" + d.column
@@ -172,7 +167,6 @@ function refreshGraph() {
   link.exit().remove();
   let linkEnter = link.enter().append("g").attr("class", "link-group");
 
-  // Invisible hit area (non-scaling so its stroke remains constant).
   linkEnter
     .append("line")
     .attr("class", "link-hit")
@@ -188,7 +182,6 @@ function refreshGraph() {
       removeHoverEffect(this.parentNode, d);
     });
 
-  // Visible link line.
   linkEnter
     .append("line")
     .attr("class", "link-visible")
@@ -204,7 +197,6 @@ function refreshGraph() {
 
   link = linkEnter.merge(link);
 
-  // Update nodes.
   node = node.data(graph.nodes, (d) => d.id);
   node.exit().remove();
   let nodeEnter = node
@@ -222,18 +214,14 @@ function refreshGraph() {
   nodeEnter.append("text").attr("dx", 25).attr("dy", ".35em");
   node = nodeEnter.merge(node);
 
-  // Set node colors.
   node.select("circle").attr("fill", function (d) {
-    // If a node was marked as having been ambiguous and now has no ambiguous columns, turn green.
     if (d.wasAmbiguous && (!d.ambiguousCols || d.ambiguousCols.length === 0))
       return "green";
     if (d.ambiguousCols && d.ambiguousCols.length > 0) return "yellow";
-    // Otherwise, leave it as default blue.
     return "#1E90FF";
   });
   node.select("text").text((d) => d.id);
 
-  // Tooltip events.
   node
     .on("mouseover", function (event, d) {
       tooltip.html(d.info).style("display", "block");
@@ -247,7 +235,6 @@ function refreshGraph() {
       tooltip.style("display", "none");
     });
 
-  // Click behavior for ambiguous nodes.
   node.on("click", null);
   node
     .filter((d) => d.ambiguousCols && d.ambiguousCols.length > 0)
@@ -347,7 +334,6 @@ function openTargetModal(nodeData, col, parentModal) {
       .merge(items)
       .text((d) => d.id)
       .on("click", function (event, chosen) {
-        // When adding a manual connection for ambiguous fix, store the ambiguousData.
         graph.links.push({
           source: chosen.id,
           target: nodeData.id,
@@ -376,15 +362,81 @@ function openTargetModal(nodeData, col, parentModal) {
     .on("click", () => subModal.remove());
 }
 
+// --- New: Export and Import functionality ---
+
+// Export Graph: open a modal with a textarea containing the JSON state.
+function openExportModal() {
+  d3.selectAll(".modal").remove();
+  let modal = d3.select("body").append("div").attr("class", "modal");
+  modal.append("h3").text("Export Graph State");
+  let textArea = modal
+    .append("textarea")
+    .style("width", "100%")
+    .style("height", "200px")
+    .text(JSON.stringify(graph, null, 2));
+  let copyBtn = modal
+    .append("button")
+    .text("Copy to Clipboard")
+    .on("click", function () {
+      textArea.node().select();
+      document.execCommand("copy");
+      alert("Graph state copied to clipboard.");
+    });
+  modal
+    .append("div")
+    .attr("class", "close-btn")
+    .text("Close")
+    .on("click", () => modal.remove());
+}
+
+// Import Graph: open a modal with a textarea where user can paste JSON.
+function openImportModal() {
+  d3.selectAll(".modal").remove();
+  let modal = d3.select("body").append("div").attr("class", "modal");
+  modal.append("h3").text("Import Graph State");
+  let textArea = modal
+    .append("textarea")
+    .style("width", "100%")
+    .style("height", "200px")
+    .attr("placeholder", "Paste graph JSON here...");
+  let importBtn = modal
+    .append("button")
+    .text("Import")
+    .on("click", function () {
+      try {
+        let importedGraph = JSON.parse(textArea.node().value);
+        graph = importedGraph;
+        rehydrateGraph(graph);
+        refreshGraph();
+        updateStorage();
+        alert("Graph imported successfully.");
+        modal.remove();
+      } catch (e) {
+        alert("Invalid JSON. Please check your input.");
+      }
+    });
+  modal
+    .append("div")
+    .attr("class", "close-btn")
+    .text("Close")
+    .on("click", () => modal.remove());
+}
+
+// Attach event listeners to the export and import buttons.
+document
+  .getElementById("export-btn")
+  .addEventListener("click", openExportModal);
+document
+  .getElementById("import-btn")
+  .addEventListener("click", openImportModal);
+
 // Reset graph to default state when the reset button is pressed.
 document.getElementById("reset-btn").addEventListener("click", function () {
   if (confirm("Reset graph to default state?")) {
-    // Deep copy the default graph.
     graph = JSON.parse(JSON.stringify(defaultGraph));
     rehydrateGraph(graph);
     refreshGraph();
     updateStorage();
-    // Refresh the page after a short delay.
     setTimeout(() => window.location.reload(), 100);
   }
 });
