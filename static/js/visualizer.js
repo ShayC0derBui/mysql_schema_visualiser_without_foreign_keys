@@ -362,18 +362,33 @@ function openTargetModal(nodeData, col, parentModal) {
     .on("click", () => subModal.remove());
 }
 
-// --- New: Export and Import functionality ---
+// --- New Export/Import Functions ---
 
-// Export Graph: open a modal with a textarea containing the JSON state.
+// Export to a .json file using a Blob download.
+function exportToFile(jsonString) {
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "graph_state.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Export modal: shows textarea with JSON, copy button, and a new button to download as .json file.
 function openExportModal() {
   d3.selectAll(".modal").remove();
   let modal = d3.select("body").append("div").attr("class", "modal");
   modal.append("h3").text("Export Graph State");
+
   let textArea = modal
     .append("textarea")
     .style("width", "100%")
     .style("height", "200px")
     .text(JSON.stringify(graph, null, 2));
+
   let copyBtn = modal
     .append("button")
     .text("Copy to Clipboard")
@@ -382,6 +397,16 @@ function openExportModal() {
       document.execCommand("copy");
       alert("Graph state copied to clipboard.");
     });
+
+  // New button: Export to .json file
+  let fileExportBtn = modal
+    .append("button")
+    .text("Export to .json File")
+    .on("click", function () {
+      let jsonString = JSON.stringify(graph, null, 2);
+      exportToFile(jsonString);
+    });
+
   modal
     .append("div")
     .attr("class", "close-btn")
@@ -389,16 +414,18 @@ function openExportModal() {
     .on("click", () => modal.remove());
 }
 
-// Import Graph: open a modal with a textarea where user can paste JSON.
+// Import modal: shows textarea for manual paste and a file input for choosing a .json file.
 function openImportModal() {
   d3.selectAll(".modal").remove();
   let modal = d3.select("body").append("div").attr("class", "modal");
   modal.append("h3").text("Import Graph State");
+
   let textArea = modal
     .append("textarea")
     .style("width", "100%")
     .style("height", "200px")
     .attr("placeholder", "Paste graph JSON here...");
+
   let importBtn = modal
     .append("button")
     .text("Import")
@@ -409,12 +436,44 @@ function openImportModal() {
         rehydrateGraph(graph);
         refreshGraph();
         updateStorage();
+        setTimeout(() => window.location.reload(), 100);
         alert("Graph imported successfully.");
         modal.remove();
       } catch (e) {
         alert("Invalid JSON. Please check your input.");
       }
     });
+
+  // New: File input for importing from a .json file.
+  let fileInput = modal
+    .append("input")
+    .attr("type", "file")
+    .attr("accept", ".json")
+    .style("display", "block")
+    .style("margin-top", "10px");
+
+  fileInput.on("change", function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          let importedGraph = JSON.parse(e.target.result);
+          graph = importedGraph;
+          rehydrateGraph(graph);
+          refreshGraph();
+          updateStorage();
+          setTimeout(() => window.location.reload(), 100);
+          alert("Graph imported successfully from file.");
+          modal.remove();
+        } catch (err) {
+          alert("Invalid JSON in file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+  });
+
   modal
     .append("div")
     .attr("class", "close-btn")
@@ -422,7 +481,7 @@ function openImportModal() {
     .on("click", () => modal.remove());
 }
 
-// Attach event listeners to the export and import buttons.
+// Attach event listeners for export and import buttons.
 document
   .getElementById("export-btn")
   .addEventListener("click", openExportModal);
