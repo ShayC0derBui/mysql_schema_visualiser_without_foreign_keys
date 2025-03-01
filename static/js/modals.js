@@ -290,21 +290,6 @@ export function openForceSettingsModal(simulation) {
       simulation.alpha(1).restart();
     });
 
-  // Toggle forces on/off
-  let forcesOn = true;
-  const toggleBtn = modal.append("button").text("Turn Off Forces");
-  toggleBtn.on("click", function () {
-    if (forcesOn) {
-      simulation.stop();
-      d3.select(this).text("Turn On Forces");
-      forcesOn = false;
-    } else {
-      simulation.restart();
-      d3.select(this).text("Turn Off Forces");
-      forcesOn = true;
-    }
-  });
-
   // Close button
   modal
     .append("div")

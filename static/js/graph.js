@@ -92,7 +92,7 @@ export function refreshGraph(
     .append("line")
     .attr("class", "link-hit")
     .attr("vector-effect", "non-scaling-stroke")
-    .style("stroke-width", 10)
+    .style("stroke-width", 20)
     .style("stroke", "transparent")
     .style("pointer-events", "stroke")
     .on("click", (event, d) => onLinkClick(event, d))
