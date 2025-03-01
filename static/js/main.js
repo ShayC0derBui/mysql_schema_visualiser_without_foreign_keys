@@ -23,6 +23,7 @@ import {
   openTargetModal,
   openExportModal,
   openImportModal,
+  openForceSettingsModal,
 } from "./modals.js";
 
 // Assume GRAPH_DATA is injected as a global variable in the HTML
@@ -183,4 +184,8 @@ document.getElementById("reset-btn").addEventListener("click", function () {
     updateStorage();
     setTimeout(() => window.location.reload(), 100);
   }
+});
+
+document.getElementById("force-settings-btn").addEventListener("click", () => {
+  openForceSettingsModal(simulation);
 });

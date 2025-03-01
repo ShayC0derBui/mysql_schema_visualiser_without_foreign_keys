@@ -208,3 +208,107 @@ export function openImportModal(graph, rehydrateGraph, refreshGraph) {
     .text("Close")
     .on("click", () => modal.remove());
 }
+
+/**
+ * Opens a modal to set the graph layout.
+ */
+export function openForceSettingsModal(simulation) {
+  // Remove any existing modals
+  d3.selectAll(".modal").remove();
+
+  // Create the modal container
+  const modal = d3.select("body").append("div").attr("class", "modal");
+
+  modal.append("h3").text("Force Settings");
+
+  // We'll store the current charge/link/collision in variables so we can show them initially
+  let currentCharge = simulation.force("charge").strength();
+  // The link distance can be read from the link force's .distance() if it's a function or a numeric
+  let currentLinkDistance = simulation.force("link").distance();
+  let currentCollision = simulation.force("collide").radius();
+
+  // If they're stored as functions, you may need to store a default or keep track in global variables
+
+  // Create a container for each slider + label
+  // 1) Charge
+  const chargeDiv = modal.append("div");
+  chargeDiv.append("label").text("Charge: ");
+  chargeDiv.append("span").attr("id", "charge-value").text(currentCharge);
+
+  chargeDiv
+    .append("input")
+    .attr("type", "range")
+    .attr("min", -2000)
+    .attr("max", 0)
+    .attr("step", 50)
+    .attr("value", currentCharge)
+    .on("input", function () {
+      const newVal = +this.value;
+      d3.select("#charge-value").text(newVal);
+      simulation.force("charge").strength(newVal);
+      simulation.alpha(1).restart();
+    });
+
+  // 2) Link Distance
+  const linkDistDiv = modal.append("div");
+  linkDistDiv.append("label").text("Link Distance: ");
+  linkDistDiv
+    .append("span")
+    .attr("id", "linkdist-value")
+    .text(currentLinkDistance);
+
+  linkDistDiv
+    .append("input")
+    .attr("type", "range")
+    .attr("min", 50)
+    .attr("max", 300)
+    .attr("step", 10)
+    .attr("value", currentLinkDistance)
+    .on("input", function () {
+      const newVal = +this.value;
+      d3.select("#linkdist-value").text(newVal);
+      simulation.force("link").distance(newVal);
+      simulation.alpha(1).restart();
+    });
+
+  // 3) Collision Radius
+  const collideDiv = modal.append("div");
+  collideDiv.append("label").text("Collision Radius: ");
+  collideDiv.append("span").attr("id", "collide-value").text(currentCollision);
+
+  collideDiv
+    .append("input")
+    .attr("type", "range")
+    .attr("min", 10)
+    .attr("max", 100)
+    .attr("step", 5)
+    .attr("value", currentCollision)
+    .on("input", function () {
+      const newVal = +this.value;
+      d3.select("#collide-value").text(newVal);
+      simulation.force("collide").radius(newVal);
+      simulation.alpha(1).restart();
+    });
+
+  // Toggle forces on/off
+  let forcesOn = true;
+  const toggleBtn = modal.append("button").text("Turn Off Forces");
+  toggleBtn.on("click", function () {
+    if (forcesOn) {
+      simulation.stop();
+      d3.select(this).text("Turn On Forces");
+      forcesOn = false;
+    } else {
+      simulation.restart();
+      d3.select(this).text("Turn Off Forces");
+      forcesOn = true;
+    }
+  });
+
+  // Close button
+  modal
+    .append("div")
+    .attr("class", "close-btn")
+    .text("Close")
+    .on("click", () => modal.remove());
+}
