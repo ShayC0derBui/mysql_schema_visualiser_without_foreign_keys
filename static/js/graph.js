@@ -22,7 +22,7 @@ export function applyHoverEffect(linkGroup, d, svg) {
 export function removeHoverEffect(linkGroup, d) {
   d3.select(linkGroup)
     .select("line.link-visible")
-    .style("stroke", "#999")
+    .style("stroke", d.manual ? "red" : "#999")
     .style("filter", null);
 }
 
