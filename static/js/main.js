@@ -113,7 +113,19 @@ refreshGraph(
   simulation,
   graph,
   nodeDragHandlers,
-  (e, d) => removeLink(e, d, graph),
+  (e, d) =>
+    removeLink(e, d, graph, () =>
+      refreshGraph(
+        svg,
+        g,
+        simulation,
+        graph,
+        nodeDragHandlers,
+        (e, d) => removeLink(e, d, graph),
+        applyHoverEffect,
+        removeHoverEffect
+      )
+    ),
   applyHoverEffect,
   removeHoverEffect
 );

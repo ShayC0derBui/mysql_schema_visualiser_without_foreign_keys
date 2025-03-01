@@ -31,7 +31,7 @@ export function removeHoverEffect(linkGroup, d) {
  * Handles link removal.
  * For both manual and non-manual links, reverts the target node to ambiguous.
  */
-export function removeLink(event, d, graph) {
+export function removeLink(event, d, graph, refreshGraphCallback) {
   if (
     confirm(
       `Remove connection from ${d.source.id} to ${d.target.id} (${d.column})?`
@@ -55,7 +55,7 @@ export function removeLink(event, d, graph) {
       targetNode.ambiguous = true;
     }
     graph.links = graph.links.filter((l) => l !== d);
-    // Caller should then re-render.
+    refreshGraphCallback();
   }
   event.stopPropagation();
 }
