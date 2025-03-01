@@ -88,7 +88,10 @@ const simulation = d3
       .distance(150)
   )
   .force("charge", d3.forceManyBody().strength(-500))
-  .force("center", d3.forceCenter(width / 2, height / 2));
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("x", d3.forceX(width / 2).strength(0.05))
+  .force("y", d3.forceY(height / 2).strength(0.05))
+  .force("collide", d3.forceCollide(30));
 
 // Selections for links and nodes.
 let link = g.append("g").selectAll(".link-group");
