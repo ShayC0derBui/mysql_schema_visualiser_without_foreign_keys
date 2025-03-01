@@ -2,15 +2,14 @@
 import { updateStorage } from "./state.js";
 
 /**
- * Applies a dynamic drop-shadow hover effect to the visible link.
+ * Applies a static drop-shadow hover effect to the visible link.
  */
 export function applyHoverEffect(linkGroup, d, svg) {
-  const zoomScale = d3.zoomTransform(svg.node()).k;
   svg
     .select("#dropShadow feDropShadow")
-    .attr("dx", 2 * zoomScale)
-    .attr("dy", 2 * zoomScale)
-    .attr("stdDeviation", 1 * zoomScale);
+    .attr("dx", 2) // Fixed horizontal offset
+    .attr("dy", 2) // Fixed vertical offset
+    .attr("stdDeviation", 1); // Fixed blur radius
   d3.select(linkGroup)
     .select("line.link-visible")
     .style("stroke", d.manual ? "#ff6666" : "#666")
@@ -23,7 +22,7 @@ export function applyHoverEffect(linkGroup, d, svg) {
 export function removeHoverEffect(linkGroup, d) {
   d3.select(linkGroup)
     .select("line.link-visible")
-    .style("stroke", d.manual ? "red" : "#999")
+    .style("stroke", "#999")
     .style("filter", null);
 }
 
