@@ -157,6 +157,8 @@ simulation.on("tick", function () {
 
   // Update node positions
   g.selectAll(".node").attr("transform", (d) => `translate(${d.x},${d.y})`);
+
+  updateStorage();
 });
 
 // Attach header button event listeners.
