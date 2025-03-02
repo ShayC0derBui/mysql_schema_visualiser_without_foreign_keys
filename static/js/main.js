@@ -187,5 +187,5 @@ document.getElementById("reset-btn").addEventListener("click", function () {
 });
 
 document.getElementById("force-settings-btn").addEventListener("click", () => {
-  openForceSettingsModal(simulation);
+  openForceSettingsModal(simulation, graph, width, height);
 });

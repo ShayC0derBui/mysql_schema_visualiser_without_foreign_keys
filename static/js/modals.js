@@ -1,5 +1,6 @@
 // modals.js
 
+import { applyHierarchicalLayout } from "./sorting.js";
 /**
  * Opens a modal to fix ambiguous columns for a given node.
  * Expects openTargetModal to be passed as a callback.
@@ -212,7 +213,7 @@ export function openImportModal(graph, rehydrateGraph, refreshGraph) {
 /**
  * Opens a modal to set the graph layout.
  */
-export function openForceSettingsModal(simulation) {
+export function openForceSettingsModal(simulation, graph, width, height) {
   // Remove any existing modals
   d3.selectAll(".modal").remove();
 
@@ -238,7 +239,7 @@ export function openForceSettingsModal(simulation) {
   chargeDiv
     .append("input")
     .attr("type", "range")
-    .attr("min", -2000)
+    .attr("min", -10000)
     .attr("max", 0)
     .attr("step", 50)
     .attr("value", currentCharge)
@@ -260,7 +261,7 @@ export function openForceSettingsModal(simulation) {
   linkDistDiv
     .append("input")
     .attr("type", "range")
-    .attr("min", 50)
+    .attr("min", 10)
     .attr("max", 300)
     .attr("step", 10)
     .attr("value", currentLinkDistance)
@@ -279,7 +280,7 @@ export function openForceSettingsModal(simulation) {
   collideDiv
     .append("input")
     .attr("type", "range")
-    .attr("min", 10)
+    .attr("min", 0)
     .attr("max", 100)
     .attr("step", 5)
     .attr("value", currentCollision)
@@ -289,6 +290,34 @@ export function openForceSettingsModal(simulation) {
       simulation.force("collide").radius(newVal);
       simulation.alpha(1).restart();
     });
+
+  // 4) Toggle Hierarchical Layout
+  let isHierarchical = false;
+
+  // Add a button to toggle the hierarchical layout.
+  const toggleSortButton = modal
+    .append("button")
+    .attr("id", "sort-button")
+    .text("Hierarchical Layout");
+
+  toggleSortButton.on("click", () => {
+    if (!isHierarchical) {
+      // Stop the simulation and fix positions using our layout.
+      simulation.stop();
+      applyHierarchicalLayout(graph, width, height);
+      simulation.alpha(1).restart();
+      d3.select("#sort-button").text("Free Layout");
+    } else {
+      // Remove fixed positions and restart the simulation.
+      graph.nodes.forEach((n) => {
+        n.fx = null;
+        n.fy = null;
+      });
+      simulation.alpha(1).restart();
+      d3.select("#sort-button").text("Hierarchical Layout");
+    }
+    isHierarchical = !isHierarchical;
+  });
 
   // Close button
   modal
