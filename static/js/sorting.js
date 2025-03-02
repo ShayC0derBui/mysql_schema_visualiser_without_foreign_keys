@@ -20,8 +20,8 @@ export function applyHierarchicalLayout(graph, width, height) {
   const g = new dagre.graphlib.Graph({ multigraph: true });
   g.setGraph({
     rankdir: "TB", // "TB" (top to bottom), or "LR" (left to right), etc.
-    ranksep: 50, // Vertical separation between ranks
-    nodesep: 50, // Horizontal separation between nodes
+    ranksep: 10, // Vertical separation between ranks
+    nodesep: 10, // Horizontal separation between nodes
   });
   g.setDefaultEdgeLabel(() => ({}));
 
@@ -29,7 +29,7 @@ export function applyHierarchicalLayout(graph, width, height) {
   //    You can tweak node width/height as needed for better spacing.
   graph.nodes.forEach((node) => {
     // Use a small bounding box for each node; you can increase if needed
-    g.setNode(node.id, { width: 60, height: 40 });
+    g.setNode(node.id, { width: 30, height: 20 });
   });
 
   // 3) Add edges. Dagre will figure out the layering.
