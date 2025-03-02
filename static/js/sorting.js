@@ -1,56 +1,81 @@
 // sorting.js
 
-// Use an iterative approach to assign levels even if there are cycles.
-function computeHierarchicalLevels(graph) {
-  let levels = {};
-  // Start all nodes at level 0
-  graph.nodes.forEach((node) => {
-    levels[node.id] = 0;
-  });
+import * as dagre from "dagre";
 
-  let changed = true;
-  let iteration = 0;
-  // Limit iterations to avoid infinite loops in pathological cases.
-  while (changed && iteration < 100) {
-    changed = false;
-    graph.links.forEach((link) => {
-      // Extract ids whether link.source and link.target are objects or strings.
-      const sourceId =
-        typeof link.source === "string" ? link.source : link.source.id;
-      const targetId =
-        typeof link.target === "string" ? link.target : link.target.id;
-      // If parent's level + 1 is greater than child's current level, update it.
-      let proposedLevel = levels[sourceId] + 1;
-      if (proposedLevel > levels[targetId]) {
-        levels[targetId] = proposedLevel;
-        changed = true;
-      }
-    });
-    iteration++;
-  }
-  return levels;
-}
+// Comment out or remove the old iterative approach if you like:
+// -------------------------------------------------------------
+// function computeHierarchicalLevels(graph) { ... }
+// export function applyHierarchicalLayout(graph, width, height) { ... }
 
-// Then use the levels to apply a hierarchical layout.
+/**
+ * Applies a Sugiyama-style hierarchical layout using the dagre library.
+ * Dagre automatically handles cycle-breaking internally.
+ *
+ * @param {Object} graph - The graph object with { nodes, links }.
+ * @param {number} width - The width of the SVG or drawing area.
+ * @param {number} height - The height of the SVG or drawing area.
+ */
 export function applyHierarchicalLayout(graph, width, height) {
-  const levels = computeHierarchicalLevels(graph);
-  // Determine the maximum level for spacing.
-  const maxLevel = Math.max(...Object.values(levels));
-  // Group nodes by their level.
-  const nodesByLevel = {};
-  graph.nodes.forEach((node) => {
-    const level = levels[node.id] || 0;
-    if (!nodesByLevel[level]) nodesByLevel[level] = [];
-    nodesByLevel[level].push(node);
+  // 1) Create a new directed graph for dagre
+  const g = new dagre.graphlib.Graph({ multigraph: true });
+  g.setGraph({
+    rankdir: "TB", // "TB" (top to bottom), or "LR" (left to right), etc.
+    ranksep: 50, // Vertical separation between ranks
+    nodesep: 50, // Horizontal separation between nodes
   });
-  // Assign positions: vertical position (y) by level, horizontal (x) evenly spaced.
-  Object.keys(nodesByLevel).forEach((level) => {
-    const rowNodes = nodesByLevel[level];
-    const y = (Number(level) / (maxLevel + 1)) * height;
-    const spacing = width / (rowNodes.length + 1);
-    rowNodes.forEach((node, i) => {
-      node.fx = spacing * (i + 1);
-      node.fy = y;
-    });
+  g.setDefaultEdgeLabel(() => ({}));
+
+  // 2) Add each node to dagre with an approximate bounding box (width/height).
+  //    You can tweak node width/height as needed for better spacing.
+  graph.nodes.forEach((node) => {
+    // Use a small bounding box for each node; you can increase if needed
+    g.setNode(node.id, { width: 60, height: 40 });
+  });
+
+  // 3) Add edges. Dagre will figure out the layering.
+  graph.links.forEach((link) => {
+    const sourceId =
+      typeof link.source === "string" ? link.source : link.source.id;
+    const targetId =
+      typeof link.target === "string" ? link.target : link.target.id;
+    // We just add a simple directed edge from source to target
+    g.setEdge(sourceId, targetId);
+  });
+
+  // 4) Run dagre's layout
+  dagre.layout(g);
+
+  // 5) Now map dagre’s computed x/y back into your D3 node positions.
+  //    We also do a quick pass to figure out min/max x and y for scaling.
+  let minX = Infinity,
+    maxX = -Infinity;
+  let minY = Infinity,
+    maxY = -Infinity;
+
+  g.nodes().forEach((nodeId) => {
+    const { x, y } = g.node(nodeId);
+    if (x < minX) minX = x;
+    if (x > maxX) maxX = x;
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  });
+
+  // 6) Compute a scale factor so the dagre layout fits nicely in your width/height.
+  //    Add a small buffer so nodes aren’t flush with the edges.
+  const padding = 50;
+  const layoutWidth = maxX - minX || 1;
+  const layoutHeight = maxY - minY || 1;
+  const scaleX = (width - 2 * padding) / layoutWidth;
+  const scaleY = (height - 2 * padding) / layoutHeight;
+  const scale = Math.min(scaleX, scaleY);
+
+  // 7) Assign fx, fy for each node
+  g.nodes().forEach((nodeId) => {
+    const { x, y } = g.node(nodeId);
+    const foundNode = graph.nodes.find((n) => n.id === nodeId);
+    if (foundNode) {
+      foundNode.fx = (x - minX) * scale + padding;
+      foundNode.fy = (y - minY) * scale + padding;
+    }
   });
 }
