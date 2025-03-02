@@ -78,7 +78,7 @@ defs
   .append("marker")
   .attr("id", "arrowhead")
   .attr("viewBox", "-0 -5 10 10")
-  .attr("refX", 30)
+  .attr("refX", 26)
   .attr("refY", 0)
   .attr("orient", "auto")
   .attr("markerWidth", 6)

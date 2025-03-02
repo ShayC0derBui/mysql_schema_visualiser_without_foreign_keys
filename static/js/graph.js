@@ -15,7 +15,7 @@ export function generatePath(d) {
   if (sx === tx && sy === ty) {
     // We'll draw a small cubic Bézier curve that loops around the node.
     // Adjust r for the loop size.
-    const r = 50;
+    const r = 100;
     return `
       M${sx},${sy}
       C${sx - r},${sy - r} ${sx + r},${sy - r} ${sx},${sy}
