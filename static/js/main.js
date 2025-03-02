@@ -25,6 +25,7 @@ import {
   openImportModal,
   openForceSettingsModal,
 } from "./modals.js";
+import { generatePath } from "./graph.js";
 
 // Assume GRAPH_DATA is injected as a global variable in the HTML
 // You can either import it or use window.GRAPH_DATA.
@@ -149,16 +150,13 @@ refreshGraph(
 
 // Simulation tick handler.
 simulation.on("tick", function () {
+  // For both the invisible "hit" path and the visible path
   g.selectAll(".link-group")
-    .selectAll("line")
-    .attr("x1", (d) => d.target.x)
-    .attr("y1", (d) => d.target.y)
-    .attr("x2", (d) => d.source.x)
-    .attr("y2", (d) => d.source.y);
-  g.selectAll(".node").attr(
-    "transform",
-    (d) => "translate(" + d.x + "," + d.y + ")"
-  );
+    .selectAll("path.link-hit, path.link-visible")
+    .attr("d", generatePath);
+
+  // Update node positions
+  g.selectAll(".node").attr("transform", (d) => `translate(${d.x},${d.y})`);
 });
 
 // Attach header button event listeners.

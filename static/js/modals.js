@@ -58,8 +58,11 @@ export function openTargetModal(
     .append("input")
     .attr("type", "text")
     .attr("placeholder", "Search table...");
+
+  // Change: Include all nodes (including self) as candidates.
+  let candidates = graph.nodes;
+
   let candidateList = subModal.append("ul");
-  let candidates = graph.nodes.filter((n) => n.id !== nodeData.id);
   function updateCandidateList(filterText) {
     let filtered = candidates.filter((n) =>
       n.id.toLowerCase().includes(filterText.toLowerCase())
@@ -71,6 +74,11 @@ export function openTargetModal(
       .append("li")
       .merge(items)
       .text((d) => d.id)
+      // If candidate is the current node, style it with light green background.
+      .style("background-color", (d) =>
+        d.id === nodeData.id ? "lightgreen" : null
+      )
+      .style("cursor", "pointer")
       .on("click", (event, chosen) => {
         graph.links.push({
           source: chosen.id,
