@@ -47,7 +47,7 @@ def main():
         G = build_graph(relationships, table_info)
         graph_data = graph_to_json(G)
         # Render template using our graph data (passed as a JSON string)
-        out_file = "mysql_schema_d3.html"
+        out_file = "index.html"
         render_template(graph_data=json.dumps(graph_data), output_file=out_file)
         logging.info(f"Visualization saved to {out_file}")
         full_path = os.path.abspath(out_file)
