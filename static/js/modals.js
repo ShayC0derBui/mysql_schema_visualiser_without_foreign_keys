@@ -345,13 +345,14 @@ export function openHelpModal() {
   modal
     .append("p")
     .html(
-      "Node Colors:<br>" +
-        "<span style='color: black; background-color: yellow;'>Yellow</span>: Ambiguous node (node has a connection_id but cannot determine which node to connect to due to improper formatting).<br>" +
-        "<span style='color: white; background-color: green;'>Green</span>: Ambiguity fixed (node has resolved all ambiguous columns).<br>" +
-        "<span style='color: white; background-color: #1E90FF;'>Blue</span>: Normal node (node is not ambiguous).<br><br>" +
-        "Interactions:<br>" +
+      "<strong>Node Colors:</strong><br>" +
+        "<span style='color: black; background-color: yellow; padding: 2px 4px; border-radius: 3px;'>Yellow</span>: Ambiguous node (node has a connection_id but cannot determine which node to connect to due to improper formatting).<br>" +
+        "<span style='color: white; background-color: green; padding: 2px 4px; border-radius: 3px;'>Green</span>: Ambiguity fixed (node has resolved all ambiguous columns).<br>" +
+        "<span style='color: white; background-color: #1E90FF; padding: 2px 4px; border-radius: 3px;'>Blue</span>: Normal node (node is not ambiguous).<br><br>" +
+        "<strong>Interactions:</strong><br>" +
         "You can click on a link to remove it.<br>" +
-        "You can click on a yellow node to fix its ambiguity."
+        "You can click on a yellow node to fix its ambiguity.<br><br>" +
+        "<em>Author: Prem</em>"
     );
 
   modal
