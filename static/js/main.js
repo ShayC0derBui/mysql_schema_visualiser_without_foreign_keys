@@ -151,10 +151,10 @@ refreshGraph(
 simulation.on("tick", function () {
   g.selectAll(".link-group")
     .selectAll("line")
-    .attr("x1", (d) => d.source.x)
-    .attr("y1", (d) => d.source.y)
-    .attr("x2", (d) => d.target.x)
-    .attr("y2", (d) => d.target.y);
+    .attr("x1", (d) => d.target.x)
+    .attr("y1", (d) => d.target.y)
+    .attr("x2", (d) => d.source.x)
+    .attr("y2", (d) => d.source.y);
   g.selectAll(".node").attr(
     "transform",
     (d) => "translate(" + d.x + "," + d.y + ")"
