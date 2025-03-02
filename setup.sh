@@ -4,7 +4,6 @@
 docker-compose down -v
 
 # Recreate the init directory
-rm -rf init
 mkdir -p init
 
 # Write the fixed schema to init/01-schema.sql
