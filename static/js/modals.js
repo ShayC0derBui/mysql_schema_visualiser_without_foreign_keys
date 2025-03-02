@@ -334,3 +334,29 @@ export function openForceSettingsModal(simulation, graph, width, height) {
     .text("Close")
     .on("click", () => modal.remove());
 }
+
+/**
+ * Opens a modal to show the help text.
+ */
+export function openHelpModal() {
+  d3.selectAll(".modal").remove();
+  let modal = d3.select("body").append("div").attr("class", "modal");
+  modal.append("h3").text("Help");
+  modal
+    .append("p")
+    .html(
+      "Node Colors:<br>" +
+        "<span style='color: yellow;'>Yellow</span>: Ambiguous node (node has a connection_id but cannot determine which node to connect to due to improper formatting).<br>" +
+        "<span style='color: green;'>Green</span>: Ambiguity fixed (node has resolved all ambiguous columns).<br>" +
+        "<span style='color: #1E90FF;'>Blue</span>: Normal node (node is not ambiguous).<br><br>" +
+        "Interactions:<br>" +
+        "You can click on a link to remove it.<br>" +
+        "You can click on a yellow node to fix its ambiguity."
+    );
+
+  modal
+    .append("div")
+    .attr("class", "close-btn")
+    .text("Close")
+    .on("click", () => modal.remove());
+}

@@ -24,6 +24,7 @@ import {
   openExportModal,
   openImportModal,
   openForceSettingsModal,
+  openHelpModal,
 } from "./modals.js";
 import { generatePath } from "./graph.js";
 
@@ -204,4 +205,8 @@ document.getElementById("reset-btn").addEventListener("click", function () {
 
 document.getElementById("force-settings-btn").addEventListener("click", () => {
   openForceSettingsModal(simulation, graph, width, height);
+});
+
+document.getElementById("help-btn").addEventListener("click", () => {
+  openHelpModal();
 });
