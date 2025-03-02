@@ -150,6 +150,8 @@ refreshGraph(
 );
 
 // Simulation tick handler.
+let tickCounter = 0;
+
 simulation.on("tick", function () {
   // For both the invisible "hit" path and the visible path
   g.selectAll(".link-group")
@@ -159,7 +161,12 @@ simulation.on("tick", function () {
   // Update node positions
   g.selectAll(".node").attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-  updateStorage();
+  // Increment counter and call updateStorage every 300 ticks
+  tickCounter++;
+  if (tickCounter % 300 === 0) {
+    updateStorage();
+    tickCounter = 0;
+  }
 });
 
 // Attach header button event listeners.
