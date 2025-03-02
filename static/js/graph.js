@@ -101,12 +101,14 @@ export function refreshGraph(
     .on("mouseout", function (event, d) {
       onRemoveHoverEffect(this.parentNode, d);
     });
-  // Visible line.
+
+  // Visible line with arrow marker.
   linkEnter
     .append("line")
     .attr("class", "link-visible")
     .style("stroke-width", 2)
     .style("stroke", (d) => (d.manual ? "red" : "#999"))
+    .attr("marker-end", "url(#arrowhead)") // Add arrow marker
     .on("click", (event, d) => onLinkClick(event, d))
     .on("mouseover", function (event, d) {
       onHoverEffect(this.parentNode, d, svg);
