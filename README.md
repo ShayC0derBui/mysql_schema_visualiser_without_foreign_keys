@@ -1,5 +1,9 @@
 # MySQL Schema Visualizer
 
+## Demo
+<img width="1030" alt="Screenshot 2025-03-03 at 4 02 10 AM" src="https://github.com/user-attachments/assets/393d8cac-1a43-44c4-a316-e7af524fb1d0" />
+<img width="1282" alt="Screenshot 2025-03-03 at 4 02 52 AM" src="https://github.com/user-attachments/assets/5eab4d9d-bd28-4002-b4ed-dac7a4e15255" />
+
 ## Quick Database Setup with Docker (Optional)
 
 If you don't have an existing MySQL database, you can use the provided setup script to create a sample schema for demonstration purposes.
