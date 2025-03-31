@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import logging
 
 def get_connection_config(args):
     config = {
@@ -18,8 +19,9 @@ def get_connection_config(args):
                 "user": args.user or mysql_config.get("user"),
                 "password": args.password or mysql_config.get("password"),
                 "database": args.database or mysql_config.get("database"),
-                "port": args.port or mysql_config.getint("port", 3306),
+                "port": args.port or mysql_config.getint("port"),
             }
+    logging.info(f"Using config: {config}")
     return config
 
 def get_tables_and_columns(connection):

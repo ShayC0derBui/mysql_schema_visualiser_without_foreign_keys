@@ -2,11 +2,6 @@
 
 import * as dagre from "dagre";
 
-// Comment out or remove the old iterative approach if you like:
-// -------------------------------------------------------------
-// function computeHierarchicalLevels(graph) { ... }
-// export function applyHierarchicalLayout(graph, width, height) { ... }
-
 /**
  * Applies a Sugiyama-style hierarchical layout using the dagre library.
  * Dagre automatically handles cycle-breaking internally.
@@ -20,8 +15,8 @@ export function applyHierarchicalLayout(graph, width, height) {
   const g = new dagre.graphlib.Graph({ multigraph: true });
   g.setGraph({
     rankdir: "TB", // "TB" (top to bottom), or "LR" (left to right), etc.
-    ranksep: 10, // Vertical separation between ranks
-    nodesep: 10, // Horizontal separation between nodes
+    ranksep: 40, // Vertical separation between ranks
+    nodesep: 40, // Horizontal separation between nodes
   });
   g.setDefaultEdgeLabel(() => ({}));
 
@@ -29,7 +24,7 @@ export function applyHierarchicalLayout(graph, width, height) {
   //    You can tweak node width/height as needed for better spacing.
   graph.nodes.forEach((node) => {
     // Use a small bounding box for each node; you can increase if needed
-    g.setNode(node.id, { width: 30, height: 20 });
+    g.setNode(node.id, { width: 60, height: 40 });
   });
 
   // 3) Add edges. Dagre will figure out the layering.

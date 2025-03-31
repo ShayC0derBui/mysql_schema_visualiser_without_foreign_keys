@@ -29,7 +29,6 @@ import {
 import { generatePath } from "./graph.js";
 
 // Assume GRAPH_DATA is injected as a global variable in the HTML
-// You can either import it or use window.GRAPH_DATA.
 const defaultData = window.GRAPH_DATA;
 
 // Load graph state.
